@@ -1,10 +1,12 @@
 name: Android Release APK
 
 "on":
-  workflow_dispatch:
   push:
     branches:
       - main
+
+permissions:
+  contents: write
 
 jobs:
   build-android:
@@ -48,6 +50,18 @@ jobs:
         run: |
           cd android
           ./gradlew assembleRelease
+
+      - name: Read version
+        id: version
+        run: node -p "require('./app.json').expo.version" | awk '{print "version="$1}' >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: v${{ steps.version.outputs.version }}
+          generate_release_notes: true
+          files: android/app/build/outputs/apk/release/app-release.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4

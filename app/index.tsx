@@ -1,6 +1,6 @@
 import Constants from "expo-constants";
 import { Asset } from "expo-asset";
-import * as FileSystem from "expo-file-system";
+import * as FileSystem from "expo-file-system/legacy";
 import { useEffect, useState } from "react";
 import { Alert, Linking, StyleSheet, useColorScheme, View } from "react-native";
 import { WebView } from "react-native-webview";
