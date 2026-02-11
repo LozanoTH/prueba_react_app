@@ -13,15 +13,20 @@ export type ReleaseInfo = {
 
 export async function fetchLatestRelease(): Promise<ReleaseInfo | null> {
   const response = await fetch(RELEASES_LATEST_URL, {
-    headers: { Accept: "application/vnd.github+json" },
+    headers: {
+      Accept: "application/vnd.github+json",
+      "User-Agent": "nexhax-app",
+      "X-GitHub-Api-Version": "2022-11-28",
+    },
   });
   if (!response.ok) return null;
   const data = await response.json();
-  const latestTag = typeof data?.tag_name === "string" ? data.tag_name : "";
-  const latestVersion = latestTag.replace(/^v/i, "");
-  const asset = Array.isArray(data?.assets)
-    ? data.assets.find((a: any) => a?.name === "app-release.apk")
-    : null;
+  const latestTag = typeof data?.tag_name === "string" ? data.tag_name : data?.name ?? "";
+  const latestVersion = normalizeVersion(latestTag);
+  const assets = Array.isArray(data?.assets) ? data.assets : [];
+  const asset =
+    assets.find((a: any) => a?.name === "app-release.apk") ||
+    assets.find((a: any) => typeof a?.name === "string" && a.name.endsWith(".apk"));
   const apkUrl = asset?.browser_download_url ?? null;
   const htmlUrl = data?.html_url ?? null;
   if (!latestVersion) return null;
@@ -29,13 +34,16 @@ export async function fetchLatestRelease(): Promise<ReleaseInfo | null> {
 }
 
 export function isNewerVersion(latest: string, current: string) {
-  const toNum = (v: string) =>
-    v
-      .split(".")
-      .map((p) => parseInt(p, 10) || 0);
-  const [a1, b1, c1] = toNum(latest);
-  const [a2, b2, c2] = toNum(current);
-  return a1 > a2 || (a1 === a2 && (b1 > b2 || (b1 === b2 && c1 > c2)));
+  const l = toVersionParts(normalizeVersion(latest));
+  const c = toVersionParts(normalizeVersion(current));
+  const max = Math.max(l.length, c.length);
+  for (let i = 0; i < max; i += 1) {
+    const lv = l[i] ?? 0;
+    const cv = c[i] ?? 0;
+    if (lv > cv) return true;
+    if (lv < cv) return false;
+  }
+  return false;
 }
 
 export async function downloadAndInstallApk(apkUrl: string) {
@@ -51,4 +59,18 @@ export async function downloadAndInstallApk(apkUrl: string) {
     flags: 1,
     type: "application/vnd.android.package-archive",
   });
+}
+
+function normalizeVersion(value: string) {
+  return String(value)
+    .trim()
+    .replace(/^v/i, "")
+    .replace(/[^0-9.]/g, "");
+}
+
+function toVersionParts(value: string) {
+  return value
+    .split(".")
+    .filter(Boolean)
+    .map((part) => parseInt(part, 10) || 0);
 }

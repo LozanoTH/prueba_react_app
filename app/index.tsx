@@ -129,7 +129,7 @@ export default function HomeScreen() {
         }
         if (!isMounted || !latestVersion) return;
         const isNewer = isNewerVersion(latestVersion, currentVersion);
-        if (isMounted) setUpdateAvailable(isNewer);
+        if (isMounted) setUpdateAvailable(isNewer && !!latestApkUrl);
         if (isNewer) {
           Alert.alert(
             "Actualizacion disponible",

@@ -65,6 +65,8 @@ export default function AjustesScreen() {
             : { text: "Cerrar", style: "cancel" },
         ]
       );
+    } catch {
+      Alert.alert("Actualizacion", "Error de red o API de GitHub.");
     } finally {
       setChecking(false);
     }
