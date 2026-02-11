@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "nexhax",
+    "name": "TestApp",
     "slug": "prueba",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "orientation": "portrait",
     "icon": "./assets/images/icon.svg",
     "scheme": "prueba",
@@ -14,23 +14,23 @@
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/icon.png",
-        "backgroundImage": "./assets/images/icon.png",
-        "monochromeImage": "./assets/images/icon.png"
+        "foregroundImage": "./assets/images/icon.svg",
+        "backgroundImage": "./assets/images/icon.svg",
+        "monochromeImage": "./assets/images/icon.svg"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/favicon.svg"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/splash-icon.svg",
           "imageWidth": 1,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff",
