@@ -245,9 +245,6 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: "#FFFFFF",
   },
-  cardDark: {
-    backgroundColor: "#111111",
-  },
   button: {
     paddingVertical: 12,
     borderRadius: 10,
